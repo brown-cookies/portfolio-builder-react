@@ -14,8 +14,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { ThemeSwitch } from '@/components/theme-switch'
 import { LogoIcon } from './Icons'
-import { ModeToggle } from './mode-toggle'
 
 interface RouteProps {
   href: string
@@ -60,7 +60,7 @@ export const Navbar = () => {
 
           {/* mobile */}
           <span className='flex md:hidden'>
-            <ModeToggle />
+            <ThemeSwitch />
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className='px-2'>
@@ -133,7 +133,7 @@ export const Navbar = () => {
               Github
             </a>
 
-            <ModeToggle />
+            <ThemeSwitch />
           </div>
         </NavigationMenuList>
       </NavigationMenu>
