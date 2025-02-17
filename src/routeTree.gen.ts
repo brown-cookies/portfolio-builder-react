@@ -16,7 +16,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
-import { Route as authOtpImport } from './routes/(auth)/otp'
 import { Route as auth500Import } from './routes/(auth)/500'
 import { Route as AuthenticatedProjectIndexImport } from './routes/_authenticated/project/index'
 import { Route as AuthenticatedDashboardIndexImport } from './routes/_authenticated/dashboard/index'
@@ -29,27 +28,17 @@ const errors404LazyImport = createFileRoute('/(errors)/404')()
 const errors403LazyImport = createFileRoute('/(errors)/403')()
 const errors401LazyImport = createFileRoute('/(errors)/401')()
 const authSignUpLazyImport = createFileRoute('/(auth)/sign-up')()
-const authSignIn2LazyImport = createFileRoute('/(auth)/sign-in-2')()
 const authForgotPasswordLazyImport = createFileRoute(
   '/(auth)/forgot-password',
 )()
 const AuthenticatedSettingsRouteLazyImport = createFileRoute(
   '/_authenticated/settings',
 )()
-const AuthenticatedUsersIndexLazyImport = createFileRoute(
-  '/_authenticated/users/',
-)()
-const AuthenticatedTasksIndexLazyImport = createFileRoute(
-  '/_authenticated/tasks/',
-)()
 const AuthenticatedSettingsIndexLazyImport = createFileRoute(
   '/_authenticated/settings/',
 )()
 const AuthenticatedHelpCenterIndexLazyImport = createFileRoute(
   '/_authenticated/help-center/',
-)()
-const AuthenticatedChatsIndexLazyImport = createFileRoute(
-  '/_authenticated/chats/',
 )()
 const AuthenticatedAppsIndexLazyImport = createFileRoute(
   '/_authenticated/apps/',
@@ -128,14 +117,6 @@ const authSignUpLazyRoute = authSignUpLazyImport
   } as any)
   .lazy(() => import('./routes/(auth)/sign-up.lazy').then((d) => d.Route))
 
-const authSignIn2LazyRoute = authSignIn2LazyImport
-  .update({
-    id: '/(auth)/sign-in-2',
-    path: '/sign-in-2',
-    getParentRoute: () => rootRoute,
-  } as any)
-  .lazy(() => import('./routes/(auth)/sign-in-2.lazy').then((d) => d.Route))
-
 const authForgotPasswordLazyRoute = authForgotPasswordLazyImport
   .update({
     id: '/(auth)/forgot-password',
@@ -161,35 +142,11 @@ const authSignInRoute = authSignInImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const authOtpRoute = authOtpImport.update({
-  id: '/(auth)/otp',
-  path: '/otp',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const auth500Route = auth500Import.update({
   id: '/(auth)/500',
   path: '/500',
   getParentRoute: () => rootRoute,
 } as any)
-
-const AuthenticatedUsersIndexLazyRoute =
-  AuthenticatedUsersIndexLazyImport.update({
-    id: '/users/',
-    path: '/users/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/_authenticated/users/index.lazy').then((d) => d.Route),
-  )
-
-const AuthenticatedTasksIndexLazyRoute =
-  AuthenticatedTasksIndexLazyImport.update({
-    id: '/tasks/',
-    path: '/tasks/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/_authenticated/tasks/index.lazy').then((d) => d.Route),
-  )
 
 const AuthenticatedSettingsIndexLazyRoute =
   AuthenticatedSettingsIndexLazyImport.update({
@@ -209,15 +166,6 @@ const AuthenticatedHelpCenterIndexLazyRoute =
     import('./routes/_authenticated/help-center/index.lazy').then(
       (d) => d.Route,
     ),
-  )
-
-const AuthenticatedChatsIndexLazyRoute =
-  AuthenticatedChatsIndexLazyImport.update({
-    id: '/chats/',
-    path: '/chats/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/_authenticated/chats/index.lazy').then((d) => d.Route),
   )
 
 const AuthenticatedAppsIndexLazyRoute = AuthenticatedAppsIndexLazyImport.update(
@@ -312,13 +260,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof auth500Import
       parentRoute: typeof rootRoute
     }
-    '/(auth)/otp': {
-      id: '/(auth)/otp'
-      path: '/otp'
-      fullPath: '/otp'
-      preLoaderRoute: typeof authOtpImport
-      parentRoute: typeof rootRoute
-    }
     '/(auth)/sign-in': {
       id: '/(auth)/sign-in'
       path: '/sign-in'
@@ -338,13 +279,6 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof authForgotPasswordLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/(auth)/sign-in-2': {
-      id: '/(auth)/sign-in-2'
-      path: '/sign-in-2'
-      fullPath: '/sign-in-2'
-      preLoaderRoute: typeof authSignIn2LazyImport
       parentRoute: typeof rootRoute
     }
     '/(auth)/sign-up': {
@@ -438,13 +372,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppsIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
-    '/_authenticated/chats/': {
-      id: '/_authenticated/chats/'
-      path: '/chats'
-      fullPath: '/chats'
-      preLoaderRoute: typeof AuthenticatedChatsIndexLazyImport
-      parentRoute: typeof AuthenticatedRouteImport
-    }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
@@ -458,20 +385,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/'
       preLoaderRoute: typeof AuthenticatedSettingsIndexLazyImport
       parentRoute: typeof AuthenticatedSettingsRouteLazyImport
-    }
-    '/_authenticated/tasks/': {
-      id: '/_authenticated/tasks/'
-      path: '/tasks'
-      fullPath: '/tasks'
-      preLoaderRoute: typeof AuthenticatedTasksIndexLazyImport
-      parentRoute: typeof AuthenticatedRouteImport
-    }
-    '/_authenticated/users/': {
-      id: '/_authenticated/users/'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof AuthenticatedUsersIndexLazyImport
-      parentRoute: typeof AuthenticatedRouteImport
     }
   }
 }
@@ -509,10 +422,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedProjectIndexRoute: typeof AuthenticatedProjectIndexRoute
   AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute
-  AuthenticatedChatsIndexLazyRoute: typeof AuthenticatedChatsIndexLazyRoute
   AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute
-  AuthenticatedTasksIndexLazyRoute: typeof AuthenticatedTasksIndexLazyRoute
-  AuthenticatedUsersIndexLazyRoute: typeof AuthenticatedUsersIndexLazyRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -521,10 +431,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   AuthenticatedProjectIndexRoute: AuthenticatedProjectIndexRoute,
   AuthenticatedAppsIndexLazyRoute: AuthenticatedAppsIndexLazyRoute,
-  AuthenticatedChatsIndexLazyRoute: AuthenticatedChatsIndexLazyRoute,
   AuthenticatedHelpCenterIndexLazyRoute: AuthenticatedHelpCenterIndexLazyRoute,
-  AuthenticatedTasksIndexLazyRoute: AuthenticatedTasksIndexLazyRoute,
-  AuthenticatedUsersIndexLazyRoute: AuthenticatedUsersIndexLazyRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -534,11 +441,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteRouteWithChildren
   '/500': typeof errors500LazyRoute
-  '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
   '/settings': typeof AuthenticatedSettingsRouteLazyRouteWithChildren
   '/forgot-password': typeof authForgotPasswordLazyRoute
-  '/sign-in-2': typeof authSignIn2LazyRoute
   '/sign-up': typeof authSignUpLazyRoute
   '/401': typeof errors401LazyRoute
   '/403': typeof errors403LazyRoute
@@ -551,21 +456,16 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/project': typeof AuthenticatedProjectIndexRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
-  '/chats': typeof AuthenticatedChatsIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
   '/settings/': typeof AuthenticatedSettingsIndexLazyRoute
-  '/tasks': typeof AuthenticatedTasksIndexLazyRoute
-  '/users': typeof AuthenticatedUsersIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteRouteWithChildren
   '/500': typeof errors500LazyRoute
-  '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
   '/forgot-password': typeof authForgotPasswordLazyRoute
-  '/sign-in-2': typeof authSignIn2LazyRoute
   '/sign-up': typeof authSignUpLazyRoute
   '/401': typeof errors401LazyRoute
   '/403': typeof errors403LazyRoute
@@ -578,11 +478,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/project': typeof AuthenticatedProjectIndexRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
-  '/chats': typeof AuthenticatedChatsIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
   '/settings': typeof AuthenticatedSettingsIndexLazyRoute
-  '/tasks': typeof AuthenticatedTasksIndexLazyRoute
-  '/users': typeof AuthenticatedUsersIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -590,11 +487,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/(auth)/500': typeof auth500Route
-  '/(auth)/otp': typeof authOtpRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteLazyRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordLazyRoute
-  '/(auth)/sign-in-2': typeof authSignIn2LazyRoute
   '/(auth)/sign-up': typeof authSignUpLazyRoute
   '/(errors)/401': typeof errors401LazyRoute
   '/(errors)/403': typeof errors403LazyRoute
@@ -608,11 +503,8 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/project/': typeof AuthenticatedProjectIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexLazyRoute
-  '/_authenticated/chats/': typeof AuthenticatedChatsIndexLazyRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexLazyRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexLazyRoute
-  '/_authenticated/tasks/': typeof AuthenticatedTasksIndexLazyRoute
-  '/_authenticated/users/': typeof AuthenticatedUsersIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -621,11 +513,9 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/500'
-    | '/otp'
     | '/sign-in'
     | '/settings'
     | '/forgot-password'
-    | '/sign-in-2'
     | '/sign-up'
     | '/401'
     | '/403'
@@ -638,20 +528,15 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/project'
     | '/apps'
-    | '/chats'
     | '/help-center'
     | '/settings/'
-    | '/tasks'
-    | '/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
     | '/500'
-    | '/otp'
     | '/sign-in'
     | '/forgot-password'
-    | '/sign-in-2'
     | '/sign-up'
     | '/401'
     | '/403'
@@ -664,21 +549,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/project'
     | '/apps'
-    | '/chats'
     | '/help-center'
     | '/settings'
-    | '/tasks'
-    | '/users'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/(auth)/500'
-    | '/(auth)/otp'
     | '/(auth)/sign-in'
     | '/_authenticated/settings'
     | '/(auth)/forgot-password'
-    | '/(auth)/sign-in-2'
     | '/(auth)/sign-up'
     | '/(errors)/401'
     | '/(errors)/403'
@@ -692,11 +572,8 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/'
     | '/_authenticated/project/'
     | '/_authenticated/apps/'
-    | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
-    | '/_authenticated/tasks/'
-    | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
 
@@ -704,10 +581,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   auth500Route: typeof auth500Route
-  authOtpRoute: typeof authOtpRoute
   authSignInRoute: typeof authSignInRoute
   authForgotPasswordLazyRoute: typeof authForgotPasswordLazyRoute
-  authSignIn2LazyRoute: typeof authSignIn2LazyRoute
   authSignUpLazyRoute: typeof authSignUpLazyRoute
   errors401LazyRoute: typeof errors401LazyRoute
   errors403LazyRoute: typeof errors403LazyRoute
@@ -720,10 +595,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   auth500Route: auth500Route,
-  authOtpRoute: authOtpRoute,
   authSignInRoute: authSignInRoute,
   authForgotPasswordLazyRoute: authForgotPasswordLazyRoute,
-  authSignIn2LazyRoute: authSignIn2LazyRoute,
   authSignUpLazyRoute: authSignUpLazyRoute,
   errors401LazyRoute: errors401LazyRoute,
   errors403LazyRoute: errors403LazyRoute,
@@ -745,10 +618,8 @@ export const routeTree = rootRoute
         "/",
         "/_authenticated",
         "/(auth)/500",
-        "/(auth)/otp",
         "/(auth)/sign-in",
         "/(auth)/forgot-password",
-        "/(auth)/sign-in-2",
         "/(auth)/sign-up",
         "/(errors)/401",
         "/(errors)/403",
@@ -767,17 +638,11 @@ export const routeTree = rootRoute
         "/_authenticated/dashboard/",
         "/_authenticated/project/",
         "/_authenticated/apps/",
-        "/_authenticated/chats/",
-        "/_authenticated/help-center/",
-        "/_authenticated/tasks/",
-        "/_authenticated/users/"
+        "/_authenticated/help-center/"
       ]
     },
     "/(auth)/500": {
       "filePath": "(auth)/500.tsx"
-    },
-    "/(auth)/otp": {
-      "filePath": "(auth)/otp.tsx"
     },
     "/(auth)/sign-in": {
       "filePath": "(auth)/sign-in.tsx"
@@ -795,9 +660,6 @@ export const routeTree = rootRoute
     },
     "/(auth)/forgot-password": {
       "filePath": "(auth)/forgot-password.lazy.tsx"
-    },
-    "/(auth)/sign-in-2": {
-      "filePath": "(auth)/sign-in-2.lazy.tsx"
     },
     "/(auth)/sign-up": {
       "filePath": "(auth)/sign-up.lazy.tsx"
@@ -845,10 +707,6 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/apps/index.lazy.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/chats/": {
-      "filePath": "_authenticated/chats/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
     "/_authenticated/help-center/": {
       "filePath": "_authenticated/help-center/index.lazy.tsx",
       "parent": "/_authenticated"
@@ -856,14 +714,6 @@ export const routeTree = rootRoute
     "/_authenticated/settings/": {
       "filePath": "_authenticated/settings/index.lazy.tsx",
       "parent": "/_authenticated/settings"
-    },
-    "/_authenticated/tasks/": {
-      "filePath": "_authenticated/tasks/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/users/": {
-      "filePath": "_authenticated/users/index.lazy.tsx",
-      "parent": "/_authenticated"
     }
   }
 }
