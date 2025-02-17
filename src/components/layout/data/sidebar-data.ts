@@ -11,7 +11,7 @@ import {
   IconTool,
   IconUserCog,
 } from '@tabler/icons-react'
-import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
+import { Command } from 'lucide-react'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
@@ -22,19 +22,9 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'Portfolio Builder',
       logo: Command,
-      plan: 'Vite + ShadcnUI',
-    },
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
+      plan: 'Basic Plan',
     },
   ],
   navGroups: [
@@ -57,10 +47,9 @@ export const sidebarData: SidebarData = {
           icon: IconPackages,
         },
         {
-          title: 'Chats',
-          url: '/chats',
-          badge: '3',
-          icon: IconMessages,
+          title: 'Projects',
+          url: '/project',
+          icon: IconPackages,
         },
       ],
     },
