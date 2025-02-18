@@ -1,9 +1,7 @@
 import {
   IconBrowserCheck,
-  IconChecklist,
   IconHelp,
   IconLayoutDashboard,
-  IconMessages,
   IconNotification,
   IconPackages,
   IconPalette,
@@ -11,17 +9,9 @@ import {
   IconTool,
   IconUserCog,
 } from '@tabler/icons-react'
-import { Command } from 'lucide-react'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
-  teams: [
-    {
-      name: 'Portfolio Builder',
-      logo: Command,
-      plan: 'Basic Plan',
-    },
-  ],
   navGroups: [
     {
       title: 'General',
