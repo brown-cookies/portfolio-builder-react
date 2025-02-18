@@ -3,7 +3,6 @@ import {
   IconHelp,
   IconLayoutDashboard,
   IconNotification,
-  IconPackages,
   IconPalette,
   IconSettings,
   IconTool,
@@ -17,19 +16,9 @@ export const sidebarData: SidebarData = {
       title: 'General',
       items: [
         {
-          title: 'Dashboard',
+          title: 'Home',
           url: '/dashboard',
           icon: IconLayoutDashboard,
-        },
-        {
-          title: 'Apps',
-          url: '/apps',
-          icon: IconPackages,
-        },
-        {
-          title: 'Projects',
-          url: '/project',
-          icon: IconPackages,
         },
       ],
     },
