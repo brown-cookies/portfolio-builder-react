@@ -134,7 +134,7 @@ export default function Apps() {
       </Header>
 
       {/* ===== Content ===== */}
-      <Main>
+      <Main fixed>
         <AuroraBackground className='mb-3 h-36 rounded-xl border'>
           <p className='text-4xl font-semibold'>What will you design today?</p>
         </AuroraBackground>

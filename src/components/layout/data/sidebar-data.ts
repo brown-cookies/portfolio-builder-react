@@ -5,8 +5,8 @@ import {
   IconNotification,
   IconPalette,
   IconSettings,
-  IconTool,
   IconUserCog,
+  IconFolder,
 } from '@tabler/icons-react'
 import { type SidebarData } from '../types'
 
@@ -19,6 +19,11 @@ export const sidebarData: SidebarData = {
           title: 'Home',
           url: '/dashboard',
           icon: IconLayoutDashboard,
+        },
+        {
+          title: 'Projects',
+          url: '/project',
+          icon: IconFolder,
         },
       ],
     },
@@ -33,11 +38,6 @@ export const sidebarData: SidebarData = {
               title: 'Profile',
               url: '/settings',
               icon: IconUserCog,
-            },
-            {
-              title: 'Account',
-              url: '/settings/account',
-              icon: IconTool,
             },
             {
               title: 'Appearance',
