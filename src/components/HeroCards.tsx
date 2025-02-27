@@ -25,12 +25,12 @@ export const HeroCards = () => {
           </Avatar>
 
           <div className='flex flex-col'>
-            <CardTitle className='text-lg'>John Doe React</CardTitle>
-            <CardDescription>@john_doe</CardDescription>
+            <CardTitle className='text-lg'>Browncookies React</CardTitle>
+            <CardDescription>@browncookies</CardDescription>
           </div>
         </CardHeader>
 
-        <CardContent>This landing page is awesome!</CardContent>
+        <CardContent>This Portfolio Builder is awesome!</CardContent>
       </Card>
 
       {/* Team */}
@@ -41,17 +41,14 @@ export const HeroCards = () => {
             alt='user avatar'
             className='absolute -top-12 aspect-square h-24 w-24 rounded-full object-cover grayscale-[0%]'
           />
-          <CardTitle className='text-center'>Leo Miranda</CardTitle>
+          <CardTitle className='text-center'>Mielle Almedejar</CardTitle>
           <CardDescription className='font-normal text-primary'>
-            Frontend Developer
+            Fullstack Developer
           </CardDescription>
         </CardHeader>
 
         <CardContent className='pb-2 text-center'>
-          <p>
-            I really enjoy transforming ideas into functional software that
-            exceeds expectations
-          </p>
+          <p>I had fun building this shit and make it functional</p>
         </CardContent>
 
         <CardFooter>
@@ -111,7 +108,7 @@ export const HeroCards = () => {
           <CardTitle className='item-center flex justify-between'>
             Free
             <Badge variant='secondary' className='text-sm text-primary'>
-              Most popular
+              Recommended
             </Badge>
           </CardTitle>
           <div>
@@ -120,7 +117,7 @@ export const HeroCards = () => {
           </div>
 
           <CardDescription>
-            Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.
+            Test our portfolio builder with minimal feature
           </CardDescription>
         </CardHeader>
 
@@ -132,14 +129,17 @@ export const HeroCards = () => {
 
         <CardFooter className='flex'>
           <div className='space-y-4'>
-            {['4 Team member', '4 GB Storage', 'Upto 6 pages'].map(
-              (benefit: string) => (
-                <span key={benefit} className='flex'>
-                  <Check className='text-green-500' />{' '}
-                  <h3 className='ml-2'>{benefit}</h3>
-                </span>
-              )
-            )}
+            {[
+              'Up to 5 projects',
+              '6 pages per project',
+              'Free components',
+              'Free templates',
+            ].map((benefit: string) => (
+              <span key={benefit} className='flex'>
+                <Check className='text-green-500' />{' '}
+                <h3 className='ml-2'>{benefit}</h3>
+              </span>
+            ))}
           </div>
         </CardFooter>
       </Card>
@@ -153,8 +153,7 @@ export const HeroCards = () => {
           <div>
             <CardTitle>Light & dark mode</CardTitle>
             <CardDescription className='text-md mt-2'>
-              Lorem ipsum dolor sit amet consect adipisicing elit. Consectetur
-              natusm.
+              Support both light and dark mode
             </CardDescription>
           </div>
         </CardHeader>

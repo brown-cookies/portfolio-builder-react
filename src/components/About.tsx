@@ -17,14 +17,15 @@ export const About = () => {
                 <span className='bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent'>
                   About{' '}
                 </span>
-                Company
+                Portfolio Builder
               </h2>
               <p className='mt-4 text-xl text-muted-foreground'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit
-                amet, consectetur adipiscing elit.
+                At Portfolio Builder, we make portfolio creation simple and
+                professional. Our drag-and-drop builder, pre-built templates,
+                and real-time previews let anyone design a stunning, responsive
+                portfolio—no coding required. Whether you're a freelancer,
+                designer, or business owner, our platform helps you showcase
+                your work effortlessly. Start building today!
               </p>
             </div>
 

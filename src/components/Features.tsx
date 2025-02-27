@@ -30,7 +30,7 @@ const features: FeatureProps[] = [
     image: image3,
   },
   {
-    title: 'AI-Powered insights',
+    title: 'Pre-built templates and components',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.',
     image: image,

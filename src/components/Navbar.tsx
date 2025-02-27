@@ -54,7 +54,7 @@ export const Navbar = () => {
               className='ml-2 flex text-xl font-bold'
             >
               <LogoIcon />
-              ShadcnUI/React
+              Portfolio Builder
             </a>
           </NavigationMenuItem>
 
@@ -75,7 +75,7 @@ export const Navbar = () => {
               <SheetContent side={'left'}>
                 <SheetHeader>
                   <SheetTitle className='text-xl font-bold'>
-                    Shadcn/React
+                    Portfolio Builder
                   </SheetTitle>
                 </SheetHeader>
                 <nav className='mt-4 flex flex-col items-center justify-center gap-2'>
@@ -125,12 +125,11 @@ export const Navbar = () => {
           <div className='hidden gap-2 md:flex'>
             <a
               rel='noreferrer noopener'
-              href='https://github.com/leoMirandaa/shadcn-landing-page.git'
+              href='/sign-up'
               target='_blank'
-              className={`border ${buttonVariants({ variant: 'secondary' })}`}
+              className={`border ${buttonVariants({ variant: 'default' })}`}
             >
-              <GitHubLogoIcon className='mr-2 h-5 w-5' />
-              Github
+              Get Started
             </a>
 
             <ThemeSwitch />

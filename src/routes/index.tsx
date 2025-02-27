@@ -24,12 +24,12 @@ export default function Index() {
     <>
       <Navbar />
       <Hero />
-      <Sponsors />
+      {/* <Sponsors /> */}
       <About />
-      <HowItWorks />
+      {/* <HowItWorks /> */}
       <Features />
       <Services />
-      <Cta />
+      {/* <Cta /> */}
       <Testimonials />
       <Team />
       <Pricing />

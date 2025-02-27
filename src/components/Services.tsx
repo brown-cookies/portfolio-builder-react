@@ -16,16 +16,16 @@ interface ServiceProps {
 
 const serviceList: ServiceProps[] = [
   {
-    title: 'Code Collaboration',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.',
-    icon: <ChartIcon />,
-  },
-  {
     title: 'Project Management',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.',
     icon: <WalletIcon />,
+  },
+  {
+    title: 'Code Collaboration',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.',
+    icon: <ChartIcon />,
   },
   {
     title: 'Task Automation',
@@ -41,9 +41,7 @@ export const Services = () => {
       <div className='grid place-items-center gap-8 lg:grid-cols-[1fr,1fr]'>
         <div>
           <h2 className='text-3xl font-bold md:text-4xl'>
-            <span className='bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent'>
-              Client-Centric{' '}
-            </span>
+            <span className='bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent'></span>
             Services
           </h2>
 
