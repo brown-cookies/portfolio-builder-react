@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { useAppSelector } from '@/hooks'
 import { UserSessionStorageType } from '@/types/UserSessionStorageType'
 import { useSessionStorage } from '@uidotdev/usehooks'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
