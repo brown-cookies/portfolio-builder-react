@@ -1,6 +1,9 @@
+import Cookies from 'js-cookie'
 import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
+import { UserSessionStorageType } from '@/types/UserSessionStorageType'
+import { useSessionStorage } from '@uidotdev/usehooks'
 import {
-  BadgeCheck,
   Bell,
   ChevronsUpDown,
   CreditCard,
@@ -24,16 +27,19 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
+  const [user] = useSessionStorage<Partial<UserSessionStorageType>>('user', {})
+  const navigate = useNavigate()
   const { isMobile } = useSidebar()
+
+  function handleLogout() {
+    Cookies.remove('access_token')
+    Cookies.remove('refresh_token')
+
+    navigate({
+      to: '/',
+    })
+  }
 
   return (
     <SidebarMenu>
@@ -45,11 +51,17 @@ export function NavUser({
               className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
             >
               <Avatar className='h-8 w-8 rounded-lg'>
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className='rounded-lg'>SN</AvatarFallback>
+                <AvatarImage
+                  src={user?.image || '/avatars/shadcn.jpg'}
+                  alt={`${user?.first_name} ${user?.last_name}`}
+                />
+                <AvatarFallback className='rounded-lg'>
+                  {`${user?.first_name?.[0] ?? 'A'}${user?.last_name?.[0] ?? 'D'}` ||
+                    'NA'}
+                </AvatarFallback>
               </Avatar>
               <div className='grid flex-1 text-left text-sm leading-tight'>
-                <span className='truncate font-semibold'>{user.name}</span>
+                <span className='truncate font-semibold'>{`${user?.first_name} ${user?.last_name}`}</span>
                 <span className='truncate text-xs'>{user.email}</span>
               </div>
               <ChevronsUpDown className='ml-auto size-4' />
@@ -64,12 +76,20 @@ export function NavUser({
             <DropdownMenuLabel className='p-0 font-normal'>
               <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
                 <Avatar className='h-8 w-8 rounded-lg'>
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className='rounded-lg'>SN</AvatarFallback>
+                  <AvatarImage
+                    src={user?.image || '/avatars/shadcn.jpg'}
+                    alt={`${user?.first_name} ${user?.last_name}`}
+                  />
+                  <AvatarFallback className='rounded-lg'>
+                    {`${user?.first_name?.[0] ?? 'A'}${user?.last_name?.[0] ?? 'D'}` ||
+                      'NA'}
+                  </AvatarFallback>
                 </Avatar>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>{user.name}</span>
-                  <span className='truncate text-xs'>{user.email}</span>
+                  <span className='truncate font-semibold'>
+                    {user?.username}
+                  </span>
+                  <span className='truncate text-xs'>{user?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -82,12 +102,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link to='/settings/account'>
-                  <BadgeCheck />
-                  Account
-                </Link>
-              </DropdownMenuItem>
+              <DropdownMenuItem asChild></DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to='/settings'>
                   <CreditCard />
@@ -102,7 +117,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleLogout()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

@@ -1,5 +1,6 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
+import { useCookies } from 'react-cookie'
 import { Card } from '@/components/ui/card'
 import AuthLayout from '@/components/layout/auth-layout'
 import { SignUpForm } from '@/components/sign-up-form'
@@ -9,6 +10,12 @@ export const Route = createLazyFileRoute('/(auth)/sign-up')({
 })
 
 export default function SignUp() {
+  const [cookies] = useCookies(['access_token', 'refresh_token'])
+  const navigate = useNavigate()
+
+  if (cookies.access_token !== undefined) {
+    navigate({ to: '/dashboard' })
+  }
   return (
     <AuthLayout>
       <Card className='p-6'>
