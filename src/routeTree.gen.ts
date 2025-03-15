@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StudioImport } from './routes/studio'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as EditPageIdImport } from './routes/edit/$pageId'
@@ -55,6 +56,12 @@ const AuthenticatedSettingsAppearanceLazyImport = createFileRoute(
 )()
 
 // Create/Update Routes
+
+const StudioRoute = StudioImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -246,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRoute
     }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioImport
+      parentRoute: typeof rootRoute
+    }
     '/(auth)/500': {
       id: '/(auth)/500'
       path: '/500'
@@ -430,6 +444,7 @@ const AuthenticatedRouteRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteRouteWithChildren
+  '/studio': typeof StudioRoute
   '/500': typeof errors500LazyRoute
   '/sign-in': typeof authSignInRoute
   '/edit/$pageId': typeof EditPageIdRoute
@@ -453,6 +468,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteRouteWithChildren
+  '/studio': typeof StudioRoute
   '/500': typeof errors500LazyRoute
   '/sign-in': typeof authSignInRoute
   '/edit/$pageId': typeof EditPageIdRoute
@@ -476,6 +492,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/studio': typeof StudioRoute
   '/(auth)/500': typeof auth500Route
   '/(auth)/sign-in': typeof authSignInRoute
   '/edit/$pageId': typeof EditPageIdRoute
@@ -502,6 +519,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/studio'
     | '/500'
     | '/sign-in'
     | '/edit/$pageId'
@@ -524,6 +542,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | ''
+    | '/studio'
     | '/500'
     | '/sign-in'
     | '/edit/$pageId'
@@ -545,6 +564,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/studio'
     | '/(auth)/500'
     | '/(auth)/sign-in'
     | '/edit/$pageId'
@@ -570,6 +590,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  StudioRoute: typeof StudioRoute
   auth500Route: typeof auth500Route
   authSignInRoute: typeof authSignInRoute
   EditPageIdRoute: typeof EditPageIdRoute
@@ -585,6 +606,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  StudioRoute: StudioRoute,
   auth500Route: auth500Route,
   authSignInRoute: authSignInRoute,
   EditPageIdRoute: EditPageIdRoute,
@@ -609,6 +631,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_authenticated",
+        "/studio",
         "/(auth)/500",
         "/(auth)/sign-in",
         "/edit/$pageId",
@@ -633,6 +656,9 @@ export const routeTree = rootRoute
         "/_authenticated/apps/",
         "/_authenticated/help-center/"
       ]
+    },
+    "/studio": {
+      "filePath": "studio.tsx"
     },
     "/(auth)/500": {
       "filePath": "(auth)/500.tsx"
