@@ -22,7 +22,7 @@ const config: EditorConfig = {
   showOffsets: true,
   noticeOnUnload: false,
 
-  storageManager: false,
+  // storageManager to be set in initialization
 
   plugins: [
     (editor) => grapesjsPresetPlugin(editor, {}),
