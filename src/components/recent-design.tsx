@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import {
-  IconAdjustmentsHorizontal,
-  IconSortAscendingLetters,
-  IconSortDescendingLetters,
-} from '@tabler/icons-react'
-import { Button } from '@/components/ui/button'
+import { useQuery } from '@tanstack/react-query'
+import { IconCode } from '@tabler/icons-react'
+import { ProjectType } from '@/types/ProjectType'
+import { UserSessionStorageType } from '@/types/UserSessionStorageType'
+import { useSessionStorage } from '@uidotdev/usehooks'
+import { getProjects } from '@/api/get-projects'
+import { useToast } from '@/hooks/use-toast'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -15,35 +16,78 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 
-interface RecentDesignProps {
-  design: any
-}
-
-const appText = new Map<string, string>([
-  ['all', 'All Apps'],
-  ['connected', 'Connected'],
-  ['notConnected', 'Not Connected'],
+const sortNameText = new Map<string, string>([
+  ['ascending', 'Ascending'],
+  ['descending', 'Descending'],
 ])
 
-export default function RecentDesign(props: RecentDesignProps) {
-  const [sort, setSort] = useState('ascending')
-  const [appType, setAppType] = useState('all')
-  const [searchTerm, setSearchTerm] = useState('')
+const sortDateText = new Map<string, string>([
+  ['newest', 'Newest'],
+  ['oldest', 'Oldest'],
+])
 
-  const filteredApps = props.design
-    .sort((a, b) =>
-      sort === 'ascending'
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name)
+// Skeleton Loading Component
+const SkeletonLoading = () => {
+  return (
+    <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3'>
+      {Array.from({ length: 24 }).map((_, index) => (
+        <li key={index} className='rounded-lg border p-4 hover:shadow-md'>
+          <div className='mb-8 flex items-center justify-between'>
+            <div className='flex size-10 items-center justify-center rounded-lg bg-muted p-2'>
+              <div className='size-6 animate-pulse rounded bg-gray-300' />
+            </div>
+          </div>
+          <div>
+            <div className='mb-2 h-6 w-3/4 animate-pulse rounded bg-gray-300' />
+            <div className='h-4 w-full animate-pulse rounded bg-gray-300' />
+            <div className='mt-1 h-4 w-2/3 animate-pulse rounded bg-gray-300' />
+          </div>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+export default function RecentDesign() {
+  const [user] = useSessionStorage<Partial<UserSessionStorageType>>('user', {})
+
+  const [sortType, setSortType] = useState<'name' | 'date'>('date')
+  const [sortOrder, setSortOrder] = useState<
+    'ascending' | 'descending' | 'newest' | 'oldest'
+  >('newest')
+  const [searchTerm, setSearchTerm] = useState('')
+  const { toast } = useToast()
+
+  const {
+    data: projects,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['project-list', user?.id],
+    queryFn: () => getProjects(user?.id as number),
+  })
+
+  const filteredProjects = (projects || [])
+    .filter((project: ProjectType) =>
+      project.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((app) =>
-      appType === 'connected'
-        ? app.connected
-        : appType === 'notConnected'
-          ? !app.connected
-          : true
-    )
-    .filter((app) => app.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a: ProjectType, b: ProjectType) => {
+      if (sortType === 'name') {
+        return sortOrder === 'ascending'
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name)
+      } else if (sortType === 'date') {
+        const dateA = new Date(a.created_at).getTime()
+        const dateB = new Date(b.created_at).getTime()
+        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+      }
+      return 0
+    })
+
+  if (isError) {
+    toast({ title: 'Something went wrong!', description: error.message })
+  }
 
   return (
     <>
@@ -55,65 +99,81 @@ export default function RecentDesign(props: RecentDesignProps) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Select value={appType} onValueChange={setAppType}>
+          <Select
+            value={sortType}
+            onValueChange={(value: 'name' | 'date') => {
+              setSortType(value)
+              if (value === 'name') {
+                setSortOrder('ascending')
+              } else if (value === 'date') {
+                setSortOrder('newest')
+              }
+            }}
+          >
             <SelectTrigger className='w-36'>
-              <SelectValue>{appText.get(appType)}</SelectValue>
+              <SelectValue>{sortType === 'name' ? 'Name' : 'Date'}</SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>All Apps</SelectItem>
-              <SelectItem value='connected'>Connected</SelectItem>
-              <SelectItem value='notConnected'>Not Connected</SelectItem>
+              <SelectItem value='name'>Name</SelectItem>
+              <SelectItem value='date'>Date</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={sortOrder}
+            onValueChange={(
+              value: 'ascending' | 'descending' | 'newest' | 'oldest'
+            ) => setSortOrder(value)}
+          >
+            <SelectTrigger className='w-36'>
+              <SelectValue>
+                {sortType === 'name'
+                  ? sortNameText.get(sortOrder)
+                  : sortDateText.get(sortOrder)}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {sortType === 'name' ? (
+                <>
+                  <SelectItem value='ascending'>Ascending</SelectItem>
+                  <SelectItem value='descending'>Descending</SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem value='newest'>Newest</SelectItem>
+                  <SelectItem value='oldest'>Oldest</SelectItem>
+                </>
+              )}
             </SelectContent>
           </Select>
         </div>
-
-        <Select value={sort} onValueChange={setSort}>
-          <SelectTrigger className='w-16'>
-            <SelectValue>
-              <IconAdjustmentsHorizontal size={18} />
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent align='end'>
-            <SelectItem value='ascending'>
-              <div className='flex items-center gap-4'>
-                <IconSortAscendingLetters size={16} />
-                <span>Ascending</span>
-              </div>
-            </SelectItem>
-            <SelectItem value='descending'>
-              <div className='flex items-center gap-4'>
-                <IconSortDescendingLetters size={16} />
-                <span>Descending</span>
-              </div>
-            </SelectItem>
-          </SelectContent>
-        </Select>
       </div>
       <Separator className='shadow' />
-      <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3'>
-        {filteredApps.map((app) => (
-          <li key={app.name} className='rounded-lg border p-4 hover:shadow-md'>
-            <div className='mb-8 flex items-center justify-between'>
-              <div
-                className={`flex size-10 items-center justify-center rounded-lg bg-muted p-2`}
-              >
-                {app.logo}
-              </div>
-              <Button
-                variant='outline'
-                size='sm'
-                className={`${app.connected ? 'border border-blue-300 bg-blue-50 hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-950 dark:hover:bg-blue-900' : ''}`}
-              >
-                {app.connected ? 'Connected' : 'Connect'}
-              </Button>
-            </div>
-            <div>
-              <h2 className='mb-1 font-semibold'>{app.name}</h2>
-              <p className='line-clamp-2 text-gray-500'>{app.desc}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {isLoading ? (
+        <SkeletonLoading />
+      ) : (
+        <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3'>
+          {filteredProjects.map((app: ProjectType) => (
+            <li
+              key={app.name}
+              className='cursor-pointer rounded-lg border p-4 hover:shadow-md'
+            >
+              <a href={`edit/${app.id}`}>
+                <div className='mb-8 flex items-center justify-between'>
+                  <div
+                    className={`flex size-10 items-center justify-center rounded-lg bg-muted p-2`}
+                  >
+                    <IconCode />
+                  </div>
+                </div>
+                <div>
+                  <h2 className='mb-1 font-semibold'>{app.name}</h2>
+                  <p className='line-clamp-2 text-gray-500'>Some Description</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   )
 }

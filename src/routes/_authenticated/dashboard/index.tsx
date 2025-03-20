@@ -1,3 +1,9 @@
+import { useState } from 'react'
+import * as z from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import {
   IconBrandDiscord,
@@ -15,8 +21,32 @@ import {
   IconBrandTrello,
   IconBrandWhatsapp,
   IconBrandZoom,
+  IconFilePlus,
 } from '@tabler/icons-react'
+import type { UserSessionStorageType } from '@/types/UserSessionStorageType'
+import { useSessionStorage } from '@uidotdev/usehooks'
+import { createProject } from '@/api/create-project'
+import { useToast } from '@/hooks/use-toast'
 import { AuroraBackground } from '@/components/ui/aurora-background'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -28,100 +58,48 @@ export const Route = createFileRoute('/_authenticated/dashboard/')({
   component: Apps,
 })
 
-const apps = [
-  {
-    name: 'Telegram',
-    logo: <IconBrandTelegram />,
-    connected: false,
-    desc: 'Connect with Telegram for real-time communication.',
-  },
-  {
-    name: 'Notion',
-    logo: <IconBrandNotion />,
-    connected: true,
-    desc: 'Effortlessly sync Notion pages for seamless collaboration.',
-  },
-  {
-    name: 'Figma',
-    logo: <IconBrandFigma />,
-    connected: true,
-    desc: 'View and collaborate on Figma designs in one place.',
-  },
-  {
-    name: 'Trello',
-    logo: <IconBrandTrello />,
-    connected: false,
-    desc: 'Sync Trello cards for streamlined project management.',
-  },
-  {
-    name: 'Slack',
-    logo: <IconBrandSlack />,
-    connected: false,
-    desc: 'Integrate Slack for efficient team communication',
-  },
-  {
-    name: 'Zoom',
-    logo: <IconBrandZoom />,
-    connected: true,
-    desc: 'Host Zoom meetings directly from the dashboard.',
-  },
-  {
-    name: 'Stripe',
-    logo: <IconBrandStripe />,
-    connected: false,
-    desc: 'Easily manage Stripe transactions and payments.',
-  },
-  {
-    name: 'Gmail',
-    logo: <IconBrandGmail />,
-    connected: true,
-    desc: 'Access and manage Gmail messages effortlessly.',
-  },
-  {
-    name: 'Medium',
-    logo: <IconBrandMedium />,
-    connected: false,
-    desc: 'Explore and share Medium stories on your dashboard.',
-  },
-  {
-    name: 'Skype',
-    logo: <IconBrandSkype />,
-    connected: false,
-    desc: 'Connect with Skype contacts seamlessly.',
-  },
-  {
-    name: 'Docker',
-    logo: <IconBrandDocker />,
-    connected: false,
-    desc: 'Effortlessly manage Docker containers on your dashboard.',
-  },
-  {
-    name: 'GitHub',
-    logo: <IconBrandGithub />,
-    connected: false,
-    desc: 'Streamline code management with GitHub integration.',
-  },
-  {
-    name: 'GitLab',
-    logo: <IconBrandGitlab />,
-    connected: false,
-    desc: 'Efficiently manage code projects with GitLab integration.',
-  },
-  {
-    name: 'Discord',
-    logo: <IconBrandDiscord />,
-    connected: false,
-    desc: 'Connect with Discord for seamless team communication.',
-  },
-  {
-    name: 'WhatsApp',
-    logo: <IconBrandWhatsapp />,
-    connected: false,
-    desc: 'Easily integrate WhatsApp for direct messaging.',
-  },
-]
+const formSchema = z.object({
+  name: z.string().min(1).min(5).max(255),
+})
 
 export default function Apps() {
+  const [user] = useSessionStorage<Partial<UserSessionStorageType>>('user', {})
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: createProject,
+    onSuccess: () => {
+      toast({
+        title: 'Project created successfully!',
+        description: 'Your new project has been successfully created!',
+      })
+
+      queryClient.invalidateQueries({ queryKey: ['project-list', user?.id] })
+
+      setDialogOpen(false)
+    },
+    onError: () => {
+      toast({
+        title: 'Failed to create project!',
+        description: 'Something went wrong, please try again!',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  })
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const data = { userId: user?.id as number, name: values.name }
+
+    mutation.mutate(data)
+  }
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -139,26 +117,50 @@ export default function Apps() {
           <p className='text-4xl font-semibold'>What will you design today?</p>
         </AuroraBackground>
         <div className='w-100 flex justify-center gap-4'>
-          <button className='flex flex-col items-center gap-2'>
-            <div className='h-16 w-16 rounded-full bg-slate-200'></div>
-            <p className='text-sm text-gray-500'>New</p>
-          </button>
-          <button className='flex flex-col items-center gap-2'>
-            <div className='h-16 w-16 rounded-full bg-slate-200'></div>
-            <p className='text-sm text-gray-500'>New</p>
-          </button>
-          <button className='flex flex-col items-center gap-2'>
-            <div className='h-16 w-16 rounded-full bg-slate-200'></div>
-            <p className='text-sm text-gray-500'>New</p>
-          </button>
-          <button className='flex flex-col items-center gap-2'>
-            <div className='h-16 w-16 rounded-full bg-slate-200'></div>
-            <p className='text-sm text-gray-500'>New</p>
-          </button>
-          <button className='flex flex-col items-center gap-2'>
-            <div className='h-16 w-16 rounded-full bg-slate-200'></div>
-            <p className='text-sm text-gray-500'>New</p>
-          </button>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <button className='flex flex-col items-center gap-2 rounded-lg p-2 transition hover:bg-gray-100'>
+                <div className='flex h-16 w-16 items-center justify-center rounded-full bg-green-500 transition hover:bg-green-600'>
+                  <IconFilePlus size={32} className='text-slate-200' />
+                </div>
+                <p className='text-sm text-gray-500'>New</p>
+              </button>
+            </DialogTrigger>
+            <DialogContent className='sm:max-w-md'>
+              <DialogHeader>
+                <DialogTitle>New Project</DialogTitle>
+                <DialogDescription>
+                  Create a new portfolio project.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='space-y-8'
+                >
+                  <FormField
+                    control={form.control}
+                    name='name'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Project name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='Your project name...'
+                            type='text'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>Your project name</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type='submit'>Submit</Button>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </div>
         <div>
           <h1 className='text-2xl font-bold tracking-tight'>Recent Designs</h1>
@@ -167,7 +169,7 @@ export default function Apps() {
           </p>
         </div>
 
-        <RecentDesign design={apps} />
+        <RecentDesign />
       </Main>
     </>
   )
