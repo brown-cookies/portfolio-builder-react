@@ -13,6 +13,7 @@ import grapesjsPresetPlugin from 'grapesjs-preset-webpage'
 import grapesjsBGPlugin from 'grapesjs-style-bg'
 import grapesjsFilterPlugin from 'grapesjs-style-filter'
 import grapesjsGradientPlugin from 'grapesjs-style-gradient'
+import grapesjsTailwindPlugin from 'grapesjs-tailwind'
 import grapesjsTooltipPlugin from 'grapesjs-tooltip'
 import grapesjsTUIPlugin from 'grapesjs-tui-image-editor'
 
@@ -39,6 +40,7 @@ const config: EditorConfig = {
     (editor) => grapesjsCustomCodePlugin(editor, {}),
     (editor) => grapesjsParserPostCSSPlugin(editor, {}),
     (editor) => grapesjsTooltipPlugin(editor, {}),
+    (editor) => grapesjsTailwindPlugin(editor, {}),
     // (editor) => grapesjsFontsPlugin(editor, {}),
     // (editor) => grapesjsUiSuggestClassPlugin(editor, {}),
   ],
