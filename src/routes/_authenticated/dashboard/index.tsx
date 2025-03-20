@@ -5,24 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  IconBrandDiscord,
-  IconBrandDocker,
-  IconBrandFigma,
-  IconBrandGithub,
-  IconBrandGitlab,
-  IconBrandGmail,
-  IconBrandMedium,
-  IconBrandNotion,
-  IconBrandSkype,
-  IconBrandSlack,
-  IconBrandStripe,
-  IconBrandTelegram,
-  IconBrandTrello,
-  IconBrandWhatsapp,
-  IconBrandZoom,
-  IconFilePlus,
-} from '@tabler/icons-react'
+import { IconFilePlus } from '@tabler/icons-react'
 import type { UserSessionStorageType } from '@/types/UserSessionStorageType'
 import { useSessionStorage } from '@uidotdev/usehooks'
 import { createProject } from '@/api/create-project'

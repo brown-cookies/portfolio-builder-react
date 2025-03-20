@@ -1,18 +1,42 @@
 import { useEffect, useRef } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { config as grapesjsConfig } from '@/config/grapesjs'
+import { ProjectType } from '@/types/ProjectType'
 import grapesjs, { Editor } from 'grapesjs'
 import 'grapesjs/dist/css/grapes.min.css'
+import { getProject } from '@/api/get-project'
+import { updateProjectContent } from '@/api/update-project-content'
+import { useToast } from '@/hooks/use-toast'
 
 export const Route = createFileRoute('/edit/$pageId')({
   component: Edit,
 })
 
 function Edit() {
-  const editorRef = useRef<Editor>(null)
-  const handleClickRef = useRef<() => void>(() => {})
-
   const { pageId } = Route.useParams()
+
+  const { toast } = useToast()
+  const editorRef = useRef<Editor>(null)
+  const handleLoadProjectDataRef = useRef<(content: string) => void>(() => {})
+
+  const { data: project } = useQuery<ProjectType>({
+    queryKey: ['project-key', pageId],
+    queryFn: () => getProject(Number(pageId)),
+  })
+
+  const mutation = useMutation({
+    mutationFn: updateProjectContent,
+    onSuccess: () => {
+      toast({ title: 'Saved!', description: 'Project successfully saved!' })
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error!',
+        description: `Something went wrong! ${error.name}`,
+      })
+    },
+  })
 
   useEffect(() => {
     if (editorRef.current) return
@@ -23,7 +47,7 @@ function Edit() {
         type: 'local',
         autosave: true,
         autoload: true,
-        stepsBeforeSave: 3,
+        stepsBeforeSave: 1,
 
         options: {
           local: {
@@ -41,18 +65,20 @@ function Edit() {
     })
 
     editorInstance.Commands.add('save-code', {
-      run(editor) {
-        alert('Saved!')
+      async run(editor: Editor) {
+        const projectData = editor.getProjectData()
+
+        mutation.mutate({
+          projectId: Number(pageId),
+          content: JSON.stringify(projectData),
+        })
       },
     })
 
     editorRef.current = editorInstance
 
-    handleClickRef.current = () => {
-      if (!editorRef.current) return
-
-      const data = editorRef.current.getProjectData()
-      console.log(JSON.stringify(data))
+    handleLoadProjectDataRef.current = (content: string) => {
+      editorRef.current?.loadProjectData(JSON.parse(content))
     }
 
     return () => {
@@ -60,6 +86,12 @@ function Edit() {
       editorRef.current = null
     }
   }, [pageId])
+
+  useEffect(() => {
+    if (project !== undefined) {
+      handleLoadProjectDataRef.current(project.content)
+    }
+  }, [project])
 
   return (
     <>
