@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useNavigate } from '@tanstack/react-router'
 import { UserSessionStorageType } from '@/types/UserSessionStorageType'
@@ -10,6 +11,7 @@ import {
   LogOut,
   Sparkles,
 } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -28,9 +30,10 @@ import {
 } from '@/components/ui/sidebar'
 
 export function NavUser() {
-  const [user] = useSessionStorage<Partial<UserSessionStorageType>>('user', {})
-  const navigate = useNavigate()
+  const { user } = useAuth()
+
   const { isMobile } = useSidebar()
+  const navigate = useNavigate()
 
   function handleLogout() {
     Cookies.remove('access_token')
@@ -62,7 +65,7 @@ export function NavUser() {
               </Avatar>
               <div className='grid flex-1 text-left text-sm leading-tight'>
                 <span className='truncate font-semibold'>{`${user?.first_name} ${user?.last_name}`}</span>
-                <span className='truncate text-xs'>{user.email}</span>
+                <span className='truncate text-xs'>{user?.email}</span>
               </div>
               <ChevronsUpDown className='ml-auto size-4' />
             </SidebarMenuButton>

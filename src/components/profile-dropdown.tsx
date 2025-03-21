@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { UserSessionStorageType } from '@/types/UserSessionStorageType'
-import { useSessionStorage } from '@uidotdev/usehooks'
+import { useAuth } from '@/hooks/use-auth'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 export function ProfileDropdown() {
-  const [user] = useSessionStorage<Partial<UserSessionStorageType>>('user', {})
+  const { user } = useAuth()
 
   const navigate = useNavigate()
 

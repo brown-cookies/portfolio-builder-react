@@ -1,14 +1,16 @@
 import { HTMLAttributes, useState } from 'react'
 import { z } from 'zod'
+import { AxiosError } from 'axios'
 import Cookies from 'js-cookie'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
-import axios from '@/axios'
-import { useAppSelector, useAppDispatch } from '@/hooks'
-import { setToken } from '@/slice/user-slice'
+import { loginUser } from '@/api/login-user'
+import { validateAccessToken } from '@/api/validate-access-token'
 import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -36,10 +38,40 @@ const formSchema = z.object({
 })
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const user = useAppSelector((state) => state.user)
-  const dispatch = useAppDispatch()
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+
+  const { mutate: validateToken } = useMutation({
+    mutationFn: validateAccessToken,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['valid-token'], data)
+      navigate({ to: '/dashboard' })
+    },
+    onError: (err) => console.log(err),
+  })
+
+  const { mutate: login } = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      Cookies.set('access_token', data.access, { expires: 7 })
+      Cookies.set('refresh_token', data.refresh, { expires: 7 })
+
+      validateToken(data.access)
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError && err.status === 401) {
+        toast({
+          title: err.response?.data?.detail || 'Unauthorized',
+          description: err.message,
+        })
+      }
+    },
+    onSettled: () => {
+      setIsLoading(false)
+    },
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,23 +84,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
 
-    axios
-      .post('/account/auth/access/', data)
-      .then((res) => {
-        dispatch(
-          setToken({ token: res.data['access'], refresh: res.data['refresh'] })
-        )
-        Cookies.set('access_token', res.data['access'])
-        Cookies.set('refresh_token', res.data['refresh'])
-
-        navigate({ to: '/dashboard' })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+    login(data)
   }
 
   return (

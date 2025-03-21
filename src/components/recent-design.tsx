@@ -5,6 +5,7 @@ import { ProjectType } from '@/types/ProjectType'
 import { UserSessionStorageType } from '@/types/UserSessionStorageType'
 import { useSessionStorage } from '@uidotdev/usehooks'
 import { getProjects } from '@/api/get-projects'
+import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
 import { Input } from '@/components/ui/input'
 import {
@@ -49,7 +50,7 @@ const SkeletonLoading = () => {
 }
 
 export default function RecentDesign() {
-  const [user] = useSessionStorage<Partial<UserSessionStorageType>>('user', {})
+  const { user } = useAuth()
 
   const [sortType, setSortType] = useState<'name' | 'date'>('date')
   const [sortOrder, setSortOrder] = useState<
@@ -66,6 +67,7 @@ export default function RecentDesign() {
   } = useQuery({
     queryKey: ['project-list', user?.id],
     queryFn: () => getProjects(user?.id as number),
+    enabled: !!user?.id,
   })
 
   const filteredProjects = (projects || [])

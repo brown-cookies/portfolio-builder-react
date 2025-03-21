@@ -1,51 +1,38 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { AxiosError } from 'axios'
 import Cookies from 'js-cookie'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { useSessionStorage } from '@uidotdev/usehooks'
-import { getUserDetail } from '@/api/get-user-detail'
-import { verifyAccessToken } from '@/api/verify-access-token'
+import { validateAccessToken } from '@/api/validate-access-token'
 
 export function useAuth() {
   const token = Cookies.get('access_token')
-  const [userData, setUserData] = useSessionStorage('user', null)
-  const [isTokenVerified, setIsTokenVerified] = useState(false)
+
+  const [user, setUser] = useState(null)
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   const mutation = useMutation({
-    mutationFn: () => verifyAccessToken(token as string),
-    onSuccess: () => setIsTokenVerified(true),
-    onError: () => {
-      setIsTokenVerified(false)
-      navigate({ to: '/sign-in' })
+    mutationFn: () => validateAccessToken(token || ''),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['valid-token'], data)
+      setUser(data.user)
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError && err.response?.status === 401) {
+        navigate({ to: '/sign-in' })
+      }
     },
   })
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['user', token],
-    queryFn: () => getUserDetail(token as string),
-    enabled: isTokenVerified && !userData,
-  })
-
   useEffect(() => {
-    if (!token) {
-      navigate({ to: '/sign-in' })
-    } else if (!isTokenVerified) {
+    if (token) {
       mutation.mutate()
+    } else {
+      navigate({ to: '/sign-in' })
     }
-  }, [token, isTokenVerified, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token])
 
-  useEffect(() => {
-    if (data && JSON.stringify(data) !== JSON.stringify(userData)) {
-      setUserData(data)
-    }
-  }, [data, userData, setUserData])
-
-  useEffect(() => {
-    return () => {
-      mutation.reset()
-    }
-  }, [])
-
-  return { user: userData || data, isLoading, isTokenVerified }
+  return { isValidating: mutation.isPending, error: mutation.error, user }
 }

@@ -9,6 +9,7 @@ import { IconFilePlus } from '@tabler/icons-react'
 import type { UserSessionStorageType } from '@/types/UserSessionStorageType'
 import { useSessionStorage } from '@uidotdev/usehooks'
 import { createProject } from '@/api/create-project'
+import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
 import { AuroraBackground } from '@/components/ui/aurora-background'
 import { Button } from '@/components/ui/button'
@@ -46,11 +47,11 @@ const formSchema = z.object({
 })
 
 export default function Apps() {
-  const [user] = useSessionStorage<Partial<UserSessionStorageType>>('user', {})
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const { toast } = useToast()
-  const queryClient = useQueryClient()
 
   const mutation = useMutation({
     mutationFn: createProject,
