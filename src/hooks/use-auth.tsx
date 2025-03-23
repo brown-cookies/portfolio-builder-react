@@ -9,6 +9,7 @@ export function useAuth() {
   const token = Cookies.get('access_token')
 
   const [user, setUser] = useState(null)
+  const [userSubscription, setUserSubscription] = useState(null)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -17,6 +18,7 @@ export function useAuth() {
     onSuccess: (data) => {
       queryClient.setQueryData(['valid-token'], data)
       setUser(data.user)
+      setUserSubscription(data.subscription)
     },
     onError: (err) => {
       if (err instanceof AxiosError && err.response?.status === 401) {
@@ -34,5 +36,10 @@ export function useAuth() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
-  return { isValidating: mutation.isPending, error: mutation.error, user }
+  return {
+    isValidating: mutation.isPending,
+    error: mutation.error,
+    user,
+    subscription: userSubscription,
+  }
 }
