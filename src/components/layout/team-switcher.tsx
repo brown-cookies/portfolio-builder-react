@@ -1,6 +1,7 @@
-import { useAppSelector } from '@/hooks'
+import { useEffect } from 'react'
 import { ChevronsUpDown } from 'lucide-react'
 import { Command } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -12,7 +13,9 @@ import {
 } from '@/components/ui/sidebar'
 
 export function TeamSwitcher() {
-  const plan = useAppSelector((state) => state.plan)
+  const { subscription } = useAuth()
+
+  useEffect(() => console.log(subscription))
 
   return (
     <SidebarMenu>
@@ -27,8 +30,13 @@ export function TeamSwitcher() {
                 <Command className='size-4' />
               </div>
               <div className='grid flex-1 text-left text-sm leading-tight'>
-                <span className='truncate font-semibold'>{plan.email}</span>
-                <span className='truncate text-xs'>{plan.plan}</span>
+                <span className='truncate font-semibold'>
+                  {subscription?.plan?.name}
+                </span>
+                <span className='truncate text-xs'>
+                  {subscription?.plan?.plan_type.charAt(0).toUpperCase() +
+                    subscription?.plan?.plan_type.slice(1)}
+                </span>
               </div>
               <ChevronsUpDown className='ml-auto' />
             </SidebarMenuButton>
