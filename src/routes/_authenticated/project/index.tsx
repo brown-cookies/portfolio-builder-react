@@ -1,21 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  IconBrandDiscord,
-  IconBrandDocker,
-  IconBrandFigma,
-  IconBrandGithub,
-  IconBrandGitlab,
-  IconBrandGmail,
-  IconBrandMedium,
-  IconBrandNotion,
-  IconBrandSkype,
-  IconBrandSlack,
-  IconBrandStripe,
-  IconBrandTelegram,
-  IconBrandTrello,
-  IconBrandWhatsapp,
-  IconBrandZoom,
-} from '@tabler/icons-react'
 import { AuroraBackground } from '@/components/ui/aurora-background'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'

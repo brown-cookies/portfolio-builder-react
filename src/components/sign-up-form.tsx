@@ -40,7 +40,6 @@ const formSchema = z
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const queryClient = useQueryClient()
-  const { toast } = useToast()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
 
