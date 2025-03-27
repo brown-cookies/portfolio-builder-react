@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MedalIcon, MapIcon, PlaneIcon, GiftIcon } from '../components/Icons'
 
 interface FeatureProps {
-  icon: JSX.Element
+  icon: any
   title: string
   description: string
 }
