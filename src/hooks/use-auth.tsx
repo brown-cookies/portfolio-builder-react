@@ -8,8 +8,8 @@ import { validateAccessToken } from '@/api/validate-access-token'
 export function useAuth() {
   const token = Cookies.get('access_token')
 
-  const [user, setUser] = useState(null)
-  const [userSubscription, setUserSubscription] = useState(null)
+  const [user, setUser] = useState<any>(null)
+  const [userSubscription, setUserSubscription] = useState<any>(null)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 

@@ -1,9 +1,6 @@
 import Cookies from 'js-cookie'
-import { useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useNavigate } from '@tanstack/react-router'
-import { UserSessionStorageType } from '@/types/UserSessionStorageType'
-import { useSessionStorage } from '@uidotdev/usehooks'
 import {
   Bell,
   ChevronsUpDown,
