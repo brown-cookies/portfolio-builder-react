@@ -88,7 +88,7 @@ function Edit() {
   }, [pageId])
 
   useEffect(() => {
-    if (project !== undefined) {
+    if (project?.content != null) {
       handleLoadProjectDataRef.current(project.content)
     }
   }, [project])
