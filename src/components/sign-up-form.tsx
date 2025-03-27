@@ -9,7 +9,6 @@ import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
 import { createUser } from '@/api/create-user'
 import { validateAccessToken } from '@/api/validate-access-token'
 import { cn } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
   Form,
