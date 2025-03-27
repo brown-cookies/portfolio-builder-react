@@ -1,7 +1,5 @@
 'use client'
 
-// @ts-ignore
-// @ts-nocheck
 import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
@@ -38,6 +36,7 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<
     typeof DialogPrimitive.Content & { hideCloseButton?: boolean }
   >
+  // @ts-ignore
 >(({ className, children, hideCloseButton, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
